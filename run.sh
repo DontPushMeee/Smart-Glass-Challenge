@@ -1,33 +1,26 @@
 #!/usr/bin/env bash
-# ---------------------------------------------------------------------------
-# SmartGlasses Challenge — TSA-ASR scoring script
+# ----------------------------------------------------------------------------
+# SLT 2026 SmartGlasses Challenge — TSA-ASR scoring driver
 #
-# This script evaluates a system's hypothesis (hyp.stm) against the reference
-# transcript (ref.stm) using the MeetEval toolkit. Three metrics are reported:
-#   1) DER     — Diarization Error Rate
-#   2) cpWER   — Concatenated minimum-Permutation Word Error Rate
-#   3) tcpWER  — Time-Constrained minimum-Permutation Word Error Rate
+# This script runs the three official metrics for Task 1 (TSA-ASR) on the
+# toy example shipped in `example/`. To score your own system, replace
+# `example/ref.stm` with the official reference and `example/hyp.stm` with
+# your hypothesis. Both files must follow the STM format described in the
+# README (Section 4); for Chinese, transcripts must be character-tokenised.
 #
-# Usage:
-#   bash run.sh                       # use the bundled example files
-#   REF=path/to/ref.stm HYP=path/to/hyp.stm bash run.sh    # custom inputs
-#
-# Arguments used below:
-#   -r / --reference   reference STM file (ground truth)
-#   -h / --hypothesis  hypothesis STM file produced by your system
-#   --collar           time tolerance (seconds) on segment boundaries
-#                      0.25 s is the official setting for this challenge
-# ---------------------------------------------------------------------------
+# Outputs: each command writes a JSON file next to the hypothesis with the
+# detailed error statistics (e.g. hyp_cpwer.json, hyp_tcpwer.json,
+# hyp_dscore.json).
+# ----------------------------------------------------------------------------
 
-REF=${REF:-example/ref.stm}
-HYP=${HYP:-example/hyp.stm}
+# Diarization Error Rate (DER) via MeetEval's dscore wrapper around
+# md-eval-22.pl. The 0.25 s collar matches the official setting.
+meeteval-der dscore -r example/ref.stm -h example/hyp.stm --collar .25
 
-# 1. Diarization Error Rate (uses dscore / md-eval-22 under the hood)
-meeteval-der dscore -r "${REF}" -h "${HYP}" --collar .25
+# Concatenated minimum-Permutation WER (cpWER): permutation-invariant WER
+# with no time constraint. Reported as a diagnostic metric.
+meeteval-wer cpwer -r example/ref.stm -h example/hyp.stm
 
-# 2. cpWER — speaker-attributed WER without time constraint
-meeteval-wer cpwer -r "${REF}" -h "${HYP}"
-
-# 3. tcpWER — speaker-attributed WER with a 0.25 s time-alignment collar.
-#    This is the primary ranking metric for the TSA-ASR task.
-meeteval-wer tcpwer -r "${REF}" -h "${HYP}" --collar .25
+# Time-Constrained cpWER (tcpWER): the primary ranking metric of Task 1.
+# The collar is fixed to 5 seconds for both Dev and Test scoring.
+meeteval-wer tcpwer -r example/ref.stm -h example/hyp.stm --collar 5
