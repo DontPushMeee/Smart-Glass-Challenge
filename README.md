@@ -138,15 +138,19 @@ The exact submission packaging (file naming, directory layout, manifest) will be
 
 ## 🧠 7. SLU Task Evaluation (Task 2)
 
-For the time being, participating teams can evaluate their SLU models locally by simply calculating the **Accuracy** (i.e., the percentage of correctly answered multiple-choice questions) against the provided Dev set references. Since the metric is straightforward, a unified evaluation script is not provided at this stage.
+For the time being, participating teams can evaluate their SLU models locally by simply calculating the **Accuracy** (i.e., the percentage of correctly answered multiple-choice questions) against the provided Dev set references. Since the metric is straightforward, a unified evaluation script is not provided at this stage. Baseline accuracy scores on the Dev set are provided in Section 8.
 
 We will release the standardized submission format requirements and integrate the official SLU scoring pipeline into this repository well before the test phase and leaderboard submission open. Please stay tuned.
 
 ## 📊 8. Reference Results
 
-The numbers below are reference scores obtained by running the metrics in this toolkit on the output of **VibeVoice-ASR**. More reference results will be released in subsequent updates.
+The numbers below are reference baseline scores evaluated on the **official development (dev) set**.
 
-### Track 1 — Dyadic Dialogue Understanding
+### Task 1 — TSA-ASR
+
+The following scores are obtained by running the metrics in this toolkit on the output of [**VibeVoice-ASR**](https://github.com/microsoft/VibeVoice/blob/main/docs/vibevoice-asr.md).
+
+#### Track 1 — Dyadic Dialogue Understanding
 
 | Metric                  | Value     |
 |-------------------------|-----------|
@@ -154,7 +158,7 @@ The numbers below are reference scores obtained by running the metrics in this t
 | cpWER                   | 15.50 %   |
 | tcpWER (collar = 5 s)   | 15.95 %   |
 
-### Track 2 — Multi-Party Meeting Understanding
+#### Track 2 — Multi-Party Meeting Understanding
 
 | Metric                  | Value     |
 |-------------------------|-----------|
@@ -162,11 +166,22 @@ The numbers below are reference scores obtained by running the metrics in this t
 | cpWER                   | 30.72 %   |
 | tcpWER (collar = 5 s)   | 31.56 %   |
 
+### Task 2 — SLU
+
+The following table reports the **Accuracy (%)** of baseline Large Audio-Language Models on the multiple-choice QA task.
+
+| Model | Track 1 (Dyadic) | Track 2 (Meeting) |
+|---|:---:|:---:|
+| Qwen2.5-Omni | 63.13 | 54.37 |
+| Qwen3-Omni | 74.49 | 75.08 |
+
 Additional reference systems and the corresponding scores will be published in this repository as the challenge progresses.
 
 ## 🙏 9. Acknowledgement
 
 This toolkit is built on top of [MeetEval](https://github.com/fgnt/meeteval) by Paderborn University. We thank the authors for releasing and maintaining this excellent meeting-transcription evaluation library.
+
+We also acknowledge the use of [VibeVoice](https://github.com/microsoft/VibeVoice/blob/main/docs/vibevoice-asr.md) as one of our baseline systems for the TSA-ASR task.
 
 ## 📧 10. Contact
 
